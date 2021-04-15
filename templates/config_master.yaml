@@ -1,0 +1,6 @@
+write-kubeconfig-mode: "0644"
+tls-san:
+  - "cluster.rapiscan.systems"
+node-label:
+  - "host=harshpro"
+token: "145c1cc00684ca54cb8f19c45a03151c"
