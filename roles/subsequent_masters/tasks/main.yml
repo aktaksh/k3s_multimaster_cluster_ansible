@@ -1,5 +1,5 @@
 ---
-# tasks file for k3s first master
+# tasks file for k3s_HA_master
 
 
 - name: Download k3sio 
@@ -28,7 +28,7 @@
 - name: Copy K3s service file
   register: k3s_service
   template:
-    src: "config_master.yaml"
+    src: "config_connect_masters.yaml"
     dest: "/etc/rancher/k3s/config.yaml"
     owner: root
     group: root
@@ -41,21 +41,22 @@
     state: stopped
     enabled: yes
 
-- name: Initialize master with services
-  ansible.builtin.command: k3s server --cluster-init 
+- name: Pause for 45 seconds
+  pause:
+    seconds: 45
+
+- name: Connect other masters with services main master
+  ansible.builtin.command: k3s server 
   async: 30
   poll: 0
+
 - name: Copy config file to user home directory
   copy:
     src: /etc/rancher/k3s/k3s.yaml
     dest: /root/.kube/config
     remote_src: yes
 
-- name: Pause for 30 secs to initialize cluster
-  pause:
-    seconds: 30
-
-- name: Replace https://localhost:6443 by https://master-ip:6443
+- name: Replace https://127.0.0.1:6443 by https://master-ip:6443
   replace:
     path: /root/.kube/config
     regexp: 'https://127.0.0.1:6443'

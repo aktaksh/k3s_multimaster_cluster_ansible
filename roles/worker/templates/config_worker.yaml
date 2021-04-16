@@ -1,0 +1,4 @@
+node-label:
+  - "host=harshpro"
+server: "https://192.168.1.90:6443"
+token: "145c1cc00684ca54cb8f19c45a03151c"
