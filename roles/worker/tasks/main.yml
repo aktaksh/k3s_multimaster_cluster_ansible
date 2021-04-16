@@ -1,2 +1,59 @@
 ---
-# tasks file for roles/worker
+# tasks file for k3s_worker
+
+- name: Download k3sio 
+  get_url:
+    url: https://get.k3s.io/
+    dest: /tmp/k3sio.sh
+    mode: '0740'
+
+- name: Install k3s on First master with services
+  environment:
+    INSTALL_K3S_SKIP_START: true
+    INSTALL_K3S_CHANNEL: stable 
+    INSTALL_K3S_VERSION: "v1.20.5+k3s1"
+    INSTALL_K3S_EXEC: agents
+  ansible.builtin.command: sh /tmp/k3sio.sh
+
+- name: Create directory .kube
+  file:
+    path: /etc/rancher/
+    state: directory
+
+- name: Create directory .kube
+  file:
+    path: /etc/rancher/k3s/
+    state: directory
+
+- name: Copy K3s service file
+  register: k3s_service
+  template:
+    src: "config_worker.yaml"
+    dest: "/etc/rancher/k3s/config.yaml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable and check K3s service
+  systemd:
+    name: k3s
+    daemon_reload: yes
+    state: stopped
+    enabled: yes
+
+- name: Initialize master with services
+  ansible.builtin.command: k3s agent 
+  async: 30
+  poll: 0
+- name: Copy config file to user home directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: /root/.kube/config
+    remote_src: yes
+
+- name: Replace https://localhost:6443 by https://master-ip:6443
+  replace:
+    path: /root/.kube/config
+    regexp: 'https://127.0.0.1:6443'
+    replace: 'https://192.168.1.90:6443'
+    

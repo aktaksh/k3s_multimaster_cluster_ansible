@@ -1,6 +1,0 @@
----
-- hosts: master
-  remote_user: root
-  roles:
-    - k3s_HA_cluster
-    - roles/worker
