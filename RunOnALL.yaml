@@ -1,0 +1,12 @@
+---
+- hosts: all
+#  gather_facts: yes
+  remote_user: root
+  become: yes
+  vars_prompt:
+    - name: command 
+      prompt: What Command to fire on all ?
+      private: no
+  tasks:
+  - name: To run on all hosts
+    ansible.builtin.command: '{{ command }}'

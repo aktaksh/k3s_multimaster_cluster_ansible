@@ -36,7 +36,7 @@
 
 - name: Enable and check K3s service
   systemd:
-    name: k3s
+    name: k3s-agent
     daemon_reload: yes
     state: stopped
     enabled: yes
@@ -45,15 +45,5 @@
   ansible.builtin.command: k3s agent 
   async: 30
   poll: 0
-- name: Copy config file to user home directory
-  copy:
-    src: /etc/rancher/k3s/k3s.yaml
-    dest: /root/.kube/config
-    remote_src: yes
 
-- name: Replace https://localhost:6443 by https://master-ip:6443
-  replace:
-    path: /root/.kube/config
-    regexp: 'https://127.0.0.1:6443'
-    replace: 'https://192.168.1.90:6443'
     

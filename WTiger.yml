@@ -1,0 +1,22 @@
+---
+- hosts: first_master
+#  gather_facts: yes
+  remote_user: root
+  become: yes
+  roles:
+    - { role: master }
+
+- hosts: subsequent_masters
+#  gather_facts: yes
+  remote_user: root
+  become: yes
+  roles:
+    - { role: subsequent_masters }
+
+- hosts: worker
+#  gather_facts: yes
+  become: yes
+  remote_user: root
+  roles:
+    - { role: worker }
+
