@@ -41,10 +41,6 @@
     state: stopped
     enabled: yes
 
-- name: Pause for 45 seconds
-  pause:
-    seconds: 45
-
 - name: Connect other masters with services main master
   ansible.builtin.command: k3s server 
   async: 30
