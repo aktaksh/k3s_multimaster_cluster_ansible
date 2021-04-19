@@ -1,0 +1,18 @@
+---
+- hosts: first_master
+#  gather_facts: yes
+  become: yes
+  roles:
+    - { role: master }
+
+- hosts: subsequent_masters
+#  gather_facts: yes
+  become: yes
+  roles:
+    - { role: connect_masters }
+
+- hosts: workers
+#  gather_facts: yes
+  become: yes
+  roles:
+    - { role: workers }

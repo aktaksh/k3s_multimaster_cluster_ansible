@@ -46,10 +46,4 @@
   async: 30
   poll: 0
 
-
-- name: Replace https://localhost:6443 by https://master-ip:6443
-  replace:
-    path: /root/.kube/config
-    regexp: 'https://127.0.0.1:6443'
-    replace: 'https://192.168.1.90:6443'
     
